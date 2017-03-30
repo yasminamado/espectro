@@ -1,4 +1,5 @@
-#!/opt/anaconda/bin/python
+#!/home/yasmin/anaconda2/bin/python
+
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:

@@ -179,7 +179,7 @@ class Spectrum :
     #--- Print spectrum data
     def printdata(self) :
         for i in range(len(self.wl)) :
-            print self.wl[i],self.flux[i]
+            print self.wl[i],self.flux[i],self.fluxerr[i]
     #------------
 
     #--- Extract spectral range
@@ -201,6 +201,45 @@ class Spectrum :
         header = fits.getheader(self.filepath,0)
         return header['HJDTT']
     #------------
+
+    #--- Mask data
+    def maskdata(self, lines, width) :
+        for line in lines :
+            wl0 = line - width
+            wlf = line + width
+	    mask = np.where(np.logical_or(self.wl < wl0, self.wl > wlf))
+            self.wl = self.wl[mask]
+            self.flux = self.flux[mask]
+            self.fluxerr = self.fluxerr[mask]
+    #------------
+
+    #--- bin spectrum
+    def binning(self, wlsampling, wl0=0.0, wlf=0.0, median=False) :
+        if wl0 == 0.0:
+            wl0 = self.wl[0]
+        if wlf == 0.0:
+            wlf = self.wl[-1]
+
+        fluxvar = self.fluxerr*self.fluxerr
+
+	npoints = int((wlf-wl0)/wlsampling)
+        bins = np.linspace(wl0, wlf, npoints)
+	digitized = np.digitize(self.wl, bins)
+
+	wl_new = [self.wl[digitized == i].mean() for i in range(1, len(bins))]
+
+        if median :
+            flux_new = [np.median(self.flux[digitized == i]) for i in range(1, len(bins))]
+        else :
+            flux_new = [self.flux[digitized == i].mean() for i in range(1, len(bins))]
+
+        fluxvar_new = [self.flux[digitized == i].std() for i in range(1, len(bins))]
+
+        self.wl = wl_new
+        self.flux = flux_new
+        self.fluxerr = np.sqrt(fluxvar_new)
+    #--------------------------
+
 
 ########## SPECTRUM CLASS ############
 class SpectrumChunk :
