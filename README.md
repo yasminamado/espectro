@@ -23,7 +23,13 @@ $ESPECTRO_PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 660" --s
 In the example above the file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. This command will print out the nomalized (option `--spectype=norm`) spectrum, i.e., the following three columns:
 
 `
-wavelength(nm) flux flux_err
+# wavelength(nm) flux flux_err
+650.003 0.525241 0.00311166
+650.006 0.405992 0.00274515
+650.01 0.336208 0.00250448
+.
+.
+
 `
 
 within the wavelength range between 650 and 660 nm (option `--wlrange="650 660"`), where the wavelength is already corrected by the heliocentric velocity (option `-r`) and the wavelength is also corrected using telluric lines as reference (option `-t`).
