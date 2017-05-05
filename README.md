@@ -20,10 +20,10 @@ For example, the application `App_extract.py` extracts the spectrum within a giv
 $ESPECTRO_PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 660" --spectype=norm -tr
 `
 
-In the example above the file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. This command will print out the nomalized (option `--spectype=norm`) spectrum, i.e., the following three columns:
+where the input data file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. In the example it will print out the nomalized (option `--spectype=norm`) spectrum, i.e., the following three columns:
 
 `
 wavelength(nm) flux flux_err
 `
 
-within the wavelength range between 650 and 660 nm (option `--wlrange="650 660"`), where the wavelength is already corrected by the heliocentric velocity (option `-r`) and the wavelength is also corrected using telluric lines as reference (option `-t`).
+where the wavelength range will be between 650 and 660 nm (option `--wlrange="650 660"`). The wavelength is already corrected by heliocentric observer's velocity (option `-r`) and the wavelength is also corrected using telluric lines as reference (option `-t`).
