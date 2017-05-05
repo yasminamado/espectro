@@ -3,7 +3,8 @@ Python library to perform analysis on high-resolution spectral data reduced with
 
 To start using the ESPECTRO tools, download the following libraries:
 
-
+* spectralclass.py
+* espectrolib.py
 
 Example:
 
