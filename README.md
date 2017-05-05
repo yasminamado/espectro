@@ -12,7 +12,7 @@ Example:
   spc = Spectrum("spectrum.m.fits.gz")
   spc.info()
 ```
-One can find more examples on the use of ESPECTRO libraries in the App's available, i.e., any file starting with `App_`. The user can use these examples as starting point to develop their own applications.  
+One can find more examples to use the ESPECTRO libraries in the App's available (any file starting with `App_`). The user can use these examples as starting point to develop their own applications.  
 
 For example, the application `App_extract.py` can be used to extract the spectrum within a given wavelength range from the OPERA FITS product.  Execute the following command in a Terminal session:
 
