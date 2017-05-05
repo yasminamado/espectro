@@ -3,6 +3,8 @@ Python library to perform analysis on high-resolution spectral data reduced with
 
 Example:
 
-from spectralclass import Spectrum
-spc = Spectrum("spectrum.m.fits.gz")
-spc.info()
+```python
+  from spectralclass import Spectrum
+  spc = Spectrum("spectrum.m.fits.gz")
+  spc.info()
+```
