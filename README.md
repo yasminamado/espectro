@@ -25,4 +25,5 @@ In the example above the file `spectrum.m.fits.gz` is a spectrum product reduced
 `
 wavelength(nm) flux flux_err
 `
+
 within the wavelength range between 650 and 660 nm (option `--wlrange="650 660"`), where the wavelength is already corrected by the heliocentric velocity (option `-r`) and the wavelength is also corrected using telluric lines as reference (option `-t`).
