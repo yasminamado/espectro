@@ -18,7 +18,7 @@ from scipy.optimize import curve_fit
 class Spectrum :
     'Common base class for a spectrum'
 
-    def __init__(self, Filename, spectype="raw", polar=False, telluric=False, helio=False):
+    def __init__(self, Filename, Spectype="raw", polar=False, Telluric=False, Helio=False, SourceRV=0.0):
 
         """
         Create a Spectrum object.
@@ -30,40 +30,42 @@ class Spectrum :
 
         Examples
         --------
-        >>> spc = Spectrum("spectrumfile.spc.gz")
-        >>> spc = Spectrum("spectrumfile.m.fits.gz")
+        >>> spc = Spectrum("spectrum.m.fits.gz")
         """
-        self.sourceRV = 0.0
+        self.sourceRV = SourceRV
         
+        self.telluric = Telluric
+        self.helio = Helio
+        self.spectype = Spectype
         self.filepath = Filename
         basename = espectrolib.getbasename(self.filepath)
         
         self.id = basename[0]
         self.filename = os.path.basename(self.filepath)
 
-        #try :
-        if self.filepath.endswith(".m.fits.gz") or self.filepath.endswith(".m.fits"):
-            self.wl,self.flux,self.fluxerr=self.loadSpectrumFromMFITS(self.filepath, spectype, telluric, helio)
-        elif self.filepath.endswith(".pol.fits.gz") or self.filepath.endswith(".pol.fits") :
-            self.wl,self.flux,self.fluxerr=self.loadSpectrumFromPOLFITS(self.filepath, spectype, polar, telluric, helio)
-        else :
-            print "Error: file type not supported for input spectrum: ",self.filepath
-            exit()
-        """
+        try :
+            if self.filepath.endswith(".m.fits.gz") or self.filepath.endswith(".m.fits"):
+                self.wl,self.flux,self.fluxerr=self.loadSpectrumFromMFITS(self.filepath, self.spectype, self.telluric, self.helio)
+            elif self.filepath.endswith(".pol.fits.gz") or self.filepath.endswith(".pol.fits") :
+                self.wl,self.flux,self.fluxerr=self.loadSpectrumFromPOLFITS(self.filepath, self.spectype, polar, self.telluric, self.helio)
+            else :
+                print "Error: file type not supported for input spectrum: ",self.filepath
+                exit()
         except :
-        print "Error: could not open file: ",self.filepath
-        exit()
-        """
+            print "Error: could not open file: ",self.filepath
+            exit()
 
     #--- Function to load spectrum from .m.fits.gz file
-    def loadSpectrumFromMFITS(self,fitsfilename, spectype="raw", telluric=False, helio=False):
+    def loadSpectrumFromMFITS(self,fitsfilename, spectype="raw", telluric=False, helio=False, sort=True):
         
         wl,flux = [],[]
         hdu = fits.open(fitsfilename)
         
         self.instrument = hdu[0].header['INSTRUME']
         self.object = hdu[0].header['OBJECT']
-    
+        self.HJDTT = hdu[0].header['HJDTT']
+        self.exptime = hdu[0].header['EXPTIME']
+        
         if spectype == "raw" :
             influx = hdu[0].data[8]
             influxvar = hdu[0].data[9]
@@ -74,11 +76,10 @@ class Spectrum :
             influx = hdu[0].data[12]
             influxvar = hdu[0].data[13]
         else :
-	    print "Error: spectrum type not recognized: ",spectype
-	    exit()
+            print "Error: spectrum type not recognized: ",spectype
+            exit()
 
         influxerr = np.sqrt(influxvar)
-
 
         if telluric :
             wltmp = hdu[0].data[5]
@@ -88,37 +89,42 @@ class Spectrum :
         if helio :
             wltmp += hdu[0].data[6]
 
-	wltmp *= (1.0 - self.sourceRV*1000.0/constants.c)
+        wltmp *= (1.0 - self.sourceRV*1000.0/constants.c)
 
-        NAN_mask = np.where(np.logical_not(np.isnan(influx)))
-            
-        indices = (wltmp[NAN_mask]).argsort()
-        wl = wltmp[NAN_mask][indices]
-        flux = influx[NAN_mask][indices]
-	fluxerr = influxerr[NAN_mask][indices]
-        
+        if sort :
+            indices = wltmp.argsort()
+            wl = wltmp[indices]
+            flux = influx[indices]
+            fluxerr = influxerr[indices]
+        else :
+            wl = wltmp
+            flux = influx
+            fluxerr = influxerr
+
         return wl,flux,fluxerr
     #------------
 
     #--- Function to load spectrum from .pol.fits.gz file
-    def loadSpectrumFromPOLFITS(self,fitsfilename, spectype="raw", polar=False, telluric=False, helio=False):
+    def loadSpectrumFromPOLFITS(self,fitsfilename, spectype="raw", polar=False, telluric=False, helio=False, sort=True):
     
         wl,flux = [],[]
         hdu = fits.open(fitsfilename)
         
         self.instrument = hdu[0].header['INSTRUME']
         self.object = hdu[0].header['OBJECT']
+        self.HJDTT = hdu[0].header['HJDTT']
+        self.exptime = hdu[0].header['EXPTIME']
 
         if polar :
             if spectype == "raw" or spectype == "fcal":
-	        influx = hdu[0].data[13]
+                influx = hdu[0].data[13]
                 influxvar = hdu[0].data[14]
             elif spectype == "norm":
-	        influx = hdu[0].data[15]
+                influx = hdu[0].data[15]
                 influxvar = hdu[0].data[16]
             else :
-	       print "Error: spectrum type not recognized: ",spectype
-	       exit()
+                print "Error: spectrum type not recognized: ",spectype
+                exit()
         else :
             if spectype == "raw" :
                 influx = hdu[0].data[7]
@@ -130,8 +136,8 @@ class Spectrum :
                 influx = hdu[0].data[11]
                 influxvar = hdu[0].data[12]
             else :
-	       print "Error: spectrum type not recognized: ",spectype
-	       exit()
+                print "Error: spectrum type not recognized: ",spectype
+                exit()
 
         influxerr = np.sqrt(influxvar)
 
@@ -144,14 +150,17 @@ class Spectrum :
             wltmp += hdu[0].data[5]
 
         wltmp *= (1.0 - self.sourceRV*1000.0/constants.c)
-            
-        NAN_mask = np.where(np.logical_not(np.isnan(influx)))
-            
-        indices = (wltmp[NAN_mask]).argsort()
-        wl = wltmp[NAN_mask][indices]
-        flux = influx[NAN_mask][indices]
-	fluxerr = influxerr[NAN_mask][indices]
         
+        if sort :
+            indices = wltmp.argsort()
+            wl = wltmp[indices]
+            flux = influx[indices]
+            fluxerr = influxerr[indices]
+        else :
+            wl = wltmp
+            flux = influx
+            fluxerr = influxerr
+
         return wl, flux, fluxerr
     #------------
 
@@ -166,14 +175,20 @@ class Spectrum :
 
     #--- Print spectrum information
     def info(self) :
-        print "**************************"
-        print "Info for spectrum: ",self.filename, " Object:", self.object
-        print "Instrument:",self.instrument
-        print "wl0 =",self.wl[0],"A -- wlf =",self.wl[-1],"A"
+        print "#**************************"
+        print "#Info for spectrum: ",self.filename
+        print "#Object:", self.object
+        print "#Instrument:",self.instrument
+        print "#wl0,wlf =",self.wl[0],",",self.wl[-1],"nm"
         sampling = (self.wl[-1] - self.wl[0])/float(len(self.wl))
-        print "sampling =",sampling," A/pixel"
-        print "<F> =",self.flux.mean(),"+-",self.flux.std()
-        print "**************************\n"
+        print "#sampling =",sampling," nm/pixel"
+        print "#Wave telluric correction =",self.telluric
+        print "#Wave heliocentric correction =",self.helio
+        print "#Flux type =",self.spectype
+        print "#HJD (TT) =",self.HJDTT
+        print "#EXPTIME = ",self.exptime, "s"
+        print "#<F> =",self.flux.mean(),"+-",self.flux.std()
+        print "#**************************"
     #------------
 
     #--- Print spectrum data
@@ -207,7 +222,7 @@ class Spectrum :
         for line in lines :
             wl0 = line - width
             wlf = line + width
-	    mask = np.where(np.logical_or(self.wl < wl0, self.wl > wlf))
+            mask = np.where(np.logical_or(self.wl < wl0, self.wl > wlf))
             self.wl = self.wl[mask]
             self.flux = self.flux[mask]
             self.fluxerr = self.fluxerr[mask]
@@ -222,11 +237,11 @@ class Spectrum :
 
         fluxvar = self.fluxerr*self.fluxerr
 
-	npoints = int((wlf-wl0)/wlsampling)
+        npoints = int((wlf-wl0)/wlsampling)
         bins = np.linspace(wl0, wlf, npoints)
-	digitized = np.digitize(self.wl, bins)
+        digitized = np.digitize(self.wl, bins)
 
-	wl_new = [self.wl[digitized == i].mean() for i in range(1, len(bins))]
+        wl_new = [self.wl[digitized == i].mean() for i in range(1, len(bins))]
 
         if median :
             flux_new = [np.median(self.flux[digitized == i]) for i in range(1, len(bins))]
@@ -241,13 +256,12 @@ class Spectrum :
     #--------------------------
 
 
-########## SPECTRUM CLASS ############
+########## SPECTRUM CHUNK CLASS ############
 class SpectrumChunk :
     'Common base class for a spectrum chunk'
 
     def __init__(self, Wl, Flux, Fluxerr):
         self.wl,self.flux,self.fluxerr = Wl, Flux, Fluxerr
-
 
     def removeBackground(self, backgroundsize, wl0=0.0, wlf=0.0) :
         if wl0 == 0.0:
@@ -261,8 +275,7 @@ class SpectrumChunk :
     def snrfilter(self,snrcut) :
         snr = self.flux / self.fluxerr 
         mask = np.where(snr > snrcut)
-	self.wl,self.flux,self.fluxerr = self.wl[mask],self.flux[mask],self.fluxerr[mask]
-
+        self.wl,self.flux,self.fluxerr = self.wl[mask],self.flux[mask],self.fluxerr[mask]
 
     #--- resampling spectrum
     def resampling(self, wlsampling, wl0=0.0, wlf=0.0) :
@@ -282,7 +295,6 @@ class SpectrumChunk :
         self.fluxerr = np.sqrt(fluxvar_new)
     #--------------------------
 
-
     #--- bin spectrum
     def binning(self, wlsampling, wl0=0.0, wlf=0.0, median=False) :
         if wl0 == 0.0:
@@ -292,11 +304,11 @@ class SpectrumChunk :
 
         fluxvar = self.fluxerr*self.fluxerr
 
-	npoints = int((wlf-wl0)/wlsampling)
+        npoints = int((wlf-wl0)/wlsampling)
         bins = np.linspace(wl0, wlf, npoints)
-	digitized = np.digitize(self.wl, bins)
+        digitized = np.digitize(self.wl, bins)
 
-	wl_new = [self.wl[digitized == i].mean() for i in range(1, len(bins))]
+        wl_new = [self.wl[digitized == i].mean() for i in range(1, len(bins))]
 
         if median :
             flux_new = [np.median(self.flux[digitized == i]) for i in range(1, len(bins))]
