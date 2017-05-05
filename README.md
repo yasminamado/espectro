@@ -20,7 +20,7 @@ For example, the application `App_extract.py` extracts the spectrum within a giv
 $ESPECTRO_PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 660" --spectype=norm -tr
 `
 
-In the example above the file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. This command will print out the nomalized (option `--spectype=norm`) spectrum as the following three columns:
+In the example above the file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. This command will print out the nomalized (option `--spectype=norm`) spectrum, i.e., the following three columns:
 
 `
 wavelength(nm) flux flux_err
