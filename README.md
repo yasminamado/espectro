@@ -17,10 +17,10 @@ One can find more examples to use the ESPECTRO libraries in the App's available 
 For example, the application `App_extract.py` extracts the spectrum within a given wavelength range from the OPERA FITS product.  Execute the following command from a Terminal shell:
 
 `
-$ESPECTRO_PATH/App_extract.py --input=N20160912G0053.m.fits.gz --wlrange="650 660" --spectype=norm -tr
+$ESPECTRO_PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 660" --spectype=norm -tr
 `
 
-In the example above it will print out the nomalized (option `--spectype=norm`) spectrum in the following format:
+In the example above the file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. This command will print out the nomalized (option `--spectype=norm`) spectrum as the following three columns:
 
 `
 wavelength(nm) flux flux_err
