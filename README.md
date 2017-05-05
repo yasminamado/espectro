@@ -14,7 +14,7 @@ Example:
 ```
 In order to provide examples on the utilities of ESPECTRO libraries, there are a few App's available, so the user can use them as a starting point to develop their own applications.  
 
-For example, the application `App_extract.py` can be used to extract the spectrum within a given wavelength range. 
+For example, the application `App_extract.py` can be used to extract the spectrum within a given wavelength range. This can be executed in a Terminal session as follows:
 
 `
 $ESPECTRO_PATH/App_extract.py --input=N20160912G0053.m.fits.gz --wlrange="650 660" --spectype=norm -tr
