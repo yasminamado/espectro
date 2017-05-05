@@ -1,5 +1,5 @@
 # ESPECTRO
-Python library to perform analysis on high-resolution spectral data reduced with OPERA pipeline. For more details about data reduction with OPERA see http://wiki.lna.br/wiki/espectro). 
+ESPECTRO consists of a Python library to facilitate the analysis of high-resolution spectral data reduced with the OPERA pipeline. For more details about data reduction with OPERA see http://wiki.lna.br/wiki/espectro). 
 
 To start using the ESPECTRO tools, download the following libraries:
 
