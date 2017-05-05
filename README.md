@@ -14,7 +14,7 @@ Example:
 ```
 One can find more examples to use the ESPECTRO libraries in the App's available (any file starting with `App_`). The user can use these examples as starting point to develop their own applications.  
 
-For example, the application `App_extract.py` can be used to extract the spectrum within a given wavelength range from the OPERA FITS product.  Execute the following command in the Terminal shell:
+For example, the application `App_extract.py` extracts the spectrum within a given wavelength range from the OPERA FITS product.  Execute the following command in the Terminal shell:
 
 `
 $ESPECTRO_PATH/App_extract.py --input=N20160912G0053.m.fits.gz --wlrange="650 660" --spectype=norm -tr
