@@ -1,4 +1,3 @@
-#!/opt/anaconda/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
@@ -14,7 +13,7 @@
     
     Simple usage example:
     
-    ./espectro.py --input=1830317o.pol.fits.gz --wlrange="650 665"
+    ./espectro.py --input=1830317o.pol.fits.gz
     """
 
 __version__ = "1.0"
@@ -26,12 +25,9 @@ __copyright__ = """
 from optparse import OptionParser
 import os,sys
 from spectralclass import Spectrum
-from spectralclass import SpectrumChunk
-import espectrolib
 
 parser = OptionParser()
 parser.add_option("-i", "--input", dest="input", help="Input spectrum file",type='string', default="")
-parser.add_option("-w", "--wlrange", dest="wlrange", help="Output wavelength range (nm)",type='string', default="")
 parser.add_option("-s", "--spectype", dest="spectype", help="Spectrum type: raw, norm, or fcal",type='string', default="raw")
 parser.add_option("-p", action="store_true", dest="polar", help="polar spectrum", default=False)
 parser.add_option("-v", action="store_true", dest="verbose", help="verbose", default=False)
