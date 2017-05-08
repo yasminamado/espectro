@@ -60,7 +60,13 @@ if options.header :
     spc.info()
     print "# wavelength(nm) flux flux_err"
 
-wl0, wlf = options.wlrange.split()
-wl,flux,fluxerr = spc.extractChunk(float(wl0), float(wlf))
+if options.wlrange :
+    wl0 = float(options.wlrange.split()[0])
+    wlf = float(options.wlrange.split()[1])
+else :
+    wl0 = spc.wl[0]
+    wlf = spc.wl[-1]
+
+wl,flux,fluxerr = spc.extractChunk(wl0,wlf)
 chunk = SpectrumChunk(wl,flux,fluxerr)
 chunk.printdata()
