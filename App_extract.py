@@ -1,4 +1,3 @@
-#!/opt/anaconda/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
