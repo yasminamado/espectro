@@ -6,24 +6,24 @@ To start using the ESPECTRO tools, download the following libraries:
 * `spectralclass.py`
 * `espectrolib.py`
 
-Example:
+Usage example:
 ```python
   from spectralclass import Spectrum
   spc = Spectrum("spectrum.m.fits.gz")
   spc.info()
 ```
-One can find more examples to use the ESPECTRO libraries in the App's available (any file starting with `App_`). The user can use these examples as starting point to develop their own applications.  
+One can find more examples on how to use the ESPECTRO libraries in the App's available (any file starting with `App_`). The user can also use these examples as starting point to develop their own applications.  
 
-For example, the application `App_extract.py` extracts the spectrum within a given wavelength range from the OPERA FITS product.  Execute the following command from a Terminal shell:
+As an example, the application `App_extract.py` extracts the spectrum within a given wavelength range from the OPERA FITS product (`*.m.fits.gz`).  Execute the following command from a Terminal shell:
 
 `
 $ESPECTRO_PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 660" --spectype=norm -tr
 `
 
-where the input data file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. In the example it will print out the nomalized (option `--spectype=norm`) spectrum, i.e., the following three columns:
+The input data file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA. In the example above it will print out the nomalized spectrum (option `--spectype=norm`). It will print out the following three columns:
 
 `
 wavelength(nm) flux flux_err
 `
 
-where the wavelength range will be between 650 and 660 nm (option `--wlrange="650 660"`). The wavelength is already corrected by heliocentric observer's velocity (option `-r`) and the wavelength is also corrected using telluric lines as reference (option `-t`).
+The wavelength range is selected by the option `--wlrange="650 660"`. The option `-r` applies the heliocentric velocity correction and the option `-t` applies wavelength correction using telluric lines as reference.
