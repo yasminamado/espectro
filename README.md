@@ -6,6 +6,10 @@ To start using the ESPECTRO tools, download the following libraries:
 * `spectralclass.py`
 * `espectrolib.py`
 
+Make sure you have the following depencies installed:
+
+`numpy`, `scipy`, `astropy`
+
 Usage example:
 ```python
   from spectralclass import Spectrum
