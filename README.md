@@ -15,6 +15,7 @@ Usage example:
   from spectralclass import Spectrum
   spc = Spectrum("spectrum.m.fits.gz")
   spc.info()
+  spc.printdata()
 ```
 One can find more examples on how to use the ESPECTRO libraries in the App's available (any file starting with `App_`). The user can also use these examples as starting point to develop their own applications.  
 
