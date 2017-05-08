@@ -26,4 +26,4 @@ The input data file `spectrum.m.fits.gz` is a spectrum product reduced by OPERA.
 wavelength(nm) flux flux_err
 `
 
-The wavelength range is selected by the option `--wlrange="650 660"`. The option `-r` applies the heliocentric velocity correction and the option `-t` applies wavelength correction using telluric lines as reference. One may these options to get the spectrum without these correction. Option -e prints an informative header about the spectrum. 
+The wavelength range is selected by the option `--wlrange="650 660"`. The option `-r` applies the heliocentric velocity correction and the option `-t` applies wavelength correction using telluric lines as reference. One may these options to get the spectrum without these correction. One may also add option `-e` to print out an informative header about the spectrum. 
