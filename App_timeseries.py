@@ -1,10 +1,9 @@
-#!/opt/anaconda/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
             #!/usr/bin/python
             #!/opt/anaconda/bin/python
-            #!/Users/edermartioli/Local/Ureka/variants/common/bin/python
+
     Created on Mar 29 2017
     
     Description: Time series of spectral quantities
@@ -14,7 +13,7 @@
     INPE / Laboratorio Nacional de Astrofisica, Brazil.
     
     Simple usage example:
-    ./espectro/timeseries.py --inputdir=./espectrosflux/ --wlrange="650 665" --spectype=norm --object="AM Her" -tr
+    python $PATH/App_timeseries.py --inputdir=./espectrosflux/ --wlrange="650 665" --spectype=norm --object="AM Her" -tr
     """
 
 __version__ = "1.0"
@@ -42,7 +41,7 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with extract.py -h "; sys.exit(1);
+    print "Error: check usage with App_timeseries.py -h "; sys.exit(1);
 
 if options.verbose:
     print 'Input directory: ', options.inputdir
@@ -53,7 +52,7 @@ if options.verbose:
     print 'Telluric correction: ', options.telluric
     print 'Heliocentric correction: ', options.helio
 
-wl0, wlf = options.wlrange.split()
+wl0,wlf = espectrolib.wlrange(options.wlrange, spc)
 
 filelist = espectrolib.generateList(options.inputdir, options.object)
 

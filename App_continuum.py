@@ -1,13 +1,11 @@
-#!/opt/anaconda/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
             #!/usr/bin/python
             #!/opt/anaconda/bin/python
-            #!/Users/edermartioli/Local/Ureka/variants/common/bin/python
     Created on Mar 29 2017
     
-    Description: Estract spectrum from Espadons fits products
+    Description: Calculate continuum spectrum
     
     @author: Eder Martioli
     
@@ -15,7 +13,7 @@
     
     Simple usage example:
     
-    ./continuum.py --input=1830317o.pol.fits.gz --spectype=fcal -t -r
+    python $PATH/App_continuum.py --input=1830317o.pol.fits.gz --spectype=fcal -t -r
     """
 
 __version__ = "1.0"
@@ -42,7 +40,7 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with extract.py -h "; sys.exit(1);
+    print "Error: check usage with App_continuum.py -h "; sys.exit(1);
 
 if options.verbose:
     print 'Input spectrum: ', options.input

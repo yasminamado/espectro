@@ -13,7 +13,7 @@
     
     Simple usage example:
     
-    ./extract.py --input=1830317o.pol.fits.gz --wlrange="650 665" --spectype=norm -tr
+    python $PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 665" --spectype=norm -tr
     """
 
 __version__ = "1.0"
@@ -41,7 +41,7 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with extract.py -h "; sys.exit(1);
+    print "Error: check usage with App_extract.py -h "; sys.exit(1);
 
 if options.verbose:
     print 'Input spectrum: ', options.input
@@ -59,12 +59,7 @@ if options.header :
     spc.info()
     print "# wavelength(nm) flux flux_err"
 
-if options.wlrange :
-    wl0 = float(options.wlrange.split()[0])
-    wlf = float(options.wlrange.split()[1])
-else :
-    wl0 = spc.wl[0]
-    wlf = spc.wl[-1]
+wl0,wlf = espectrolib.wlrange(options.wlrange, spc)
 
 wl,flux,fluxerr = spc.extractChunk(wl0,wlf)
 chunk = SpectrumChunk(wl,flux,fluxerr)

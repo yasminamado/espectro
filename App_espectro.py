@@ -13,7 +13,7 @@
     
     Simple usage example:
     
-    ./espectro.py --input=1830317o.pol.fits.gz
+    python $PATH/App_espectro.py --input=1830317o.pol.fits.gz
     """
 
 __version__ = "1.0"
@@ -37,7 +37,7 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with espectro -h "; sys.exit(1);
+    print "Error: check usage with App_espectro -h "; sys.exit(1);
 
 if options.verbose:
     print 'Input spectrum: ', options.input

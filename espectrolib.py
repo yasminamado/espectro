@@ -181,3 +181,32 @@ def generateList(directory, objectname, objectkey="OBJECT"):
     return file_paths
 ######################
 
+
+######################
+def wlrange(wlstr, spc):
+    
+    """
+        Get wavelength range from input command line string string
+        
+        Parameters
+        ----------
+        wlstr : input range in string format: "wl0 wlf". E.g. "500 550"
+        spc   : Spectrum() class
+        
+        Returns
+        -------
+        wavelength floats: wl0, wlf
+        """
+
+    wl0=0.0
+    wlf=0.0
+    
+    if wlstr :
+        wl0 = float(wlstr.split()[0])
+        wlf = float(wlstr.split()[1])
+    else :
+        wl0 = spc.wl[0]
+        wlf = spc.wl[-1]
+    
+    return wl0, wlf
+######################
