@@ -33,6 +33,7 @@ parser = OptionParser()
 parser.add_option("-i", "--input", dest="input", help="Input spectrum file",type='string', default="")
 parser.add_option("-w", "--wlrange", dest="wlrange", help="Output wavelength range (nm)",type='string', default="")
 parser.add_option("-s", "--spectype", dest="spectype", help="Spectrum type: raw, norm, or fcal",type='string', default="raw")
+parser.add_option("-e", action="store_true", dest="header", help="print header", default=False)
 parser.add_option("-p", action="store_true", dest="polar", help="polar spectrum", default=False)
 parser.add_option("-v", action="store_true", dest="verbose", help="verbose", default=False)
 parser.add_option("-t", action="store_true", dest="telluric", help="telluric correction", default=False)
@@ -47,14 +48,17 @@ if options.verbose:
     print 'Input spectrum: ', options.input
     print 'Output wavelength range: ', options.wlrange
     print 'Spectrum type: ', options.spectype
+    print 'Print header: ', options.header
     print 'Polar option: ', options.polar
     print 'Telluric correction: ', options.telluric
     print 'Heliocentric correction: ', options.helio
 
 
 spc = Spectrum(options.input, options.spectype, options.polar, options.telluric, options.helio)
-spc.info()
-print "# wavelength(nm) flux flux_err"
+
+if options.header :
+    spc.info()
+    print "# wavelength(nm) flux flux_err"
 
 wl0, wlf = options.wlrange.split()
 wl,flux,fluxerr = spc.extractChunk(float(wl0), float(wlf))
