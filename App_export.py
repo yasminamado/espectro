@@ -5,7 +5,7 @@
             #!/opt/anaconda/bin/python
     Created on Mar 29 2017
     
-    Description: Estract spectrum from OPERA fits products, apply mask, resample and bin data, and save to file: *.s.fits
+    Description: Extract spectrum from OPERA fits products, apply mask, resample and bin data, and save to file: *.s.fits
     
     @author: Eder Martioli
     
