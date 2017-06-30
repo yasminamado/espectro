@@ -5,7 +5,7 @@
             #!/opt/anaconda/bin/python
     Created on Mar 29 2017
     
-    Description: Estract spectrum from OPERA fits products
+    Description: Extract spectrum from OPERA fits products
     
     @author: Eder Martioli
     
