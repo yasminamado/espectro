@@ -66,5 +66,5 @@ spc.normalizeByContinuum()
 
 spc.saveToFile(options.output)
 
-if options.outputcontinuum not "":
+if options.outputcontinuum :
     spc.saveContinuumToFile(options.outputcontinuum)
