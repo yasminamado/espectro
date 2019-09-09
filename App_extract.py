@@ -1,20 +1,19 @@
-#!/home/yasmin/anaconda2/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
             #!/usr/bin/python
             #!/opt/anaconda/bin/python
-            #!/Users/edermartioli/Local/Ureka/variants/common/bin/python
     Created on Mar 29 2017
     
-    Description: Time series of spectral quantities
+    Description: Extract spectrum from OPERA fits products
     
-    @author: Yasmin Amado 
+    @author: Eder Martioli
     
-   INPE / Laboratorio Nacional de Astrofisica, Brazil.
+    Laboratorio Nacional de Astrofisica, Brazil.
     
     Simple usage example:
-    ./espectro/timeseries.py --inputdir=./espectrosflux/ --wlrange="650 665" --spectype=norm --object="AM Her" -tr
+    
+    python $PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 665" --spectype=norm -tr
     """
 
 __version__ = "1.0"
@@ -30,10 +29,10 @@ from spectralclass import SpectrumChunk
 import espectrolib
 
 parser = OptionParser()
-parser.add_option("-i", "--inputdir", dest="inputdir", help="Input directory with spectral data",type='string', default="")
-parser.add_option("-o", "--object", dest="object", help="Object name",type='string', default="")
+parser.add_option("-i", "--input", dest="input", help="Input spectrum file",type='string', default="")
 parser.add_option("-w", "--wlrange", dest="wlrange", help="Output wavelength range (nm)",type='string', default="")
 parser.add_option("-s", "--spectype", dest="spectype", help="Spectrum type: raw, norm, or fcal",type='string', default="raw")
+parser.add_option("-e", action="store_true", dest="header", help="print header", default=False)
 parser.add_option("-p", action="store_true", dest="polar", help="polar spectrum", default=False)
 parser.add_option("-v", action="store_true", dest="verbose", help="verbose", default=False)
 parser.add_option("-t", action="store_true", dest="telluric", help="telluric correction", default=False)
@@ -42,27 +41,26 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with extract.py -h "; sys.exit(1);
+    print "Error: check usage with App_extract.py -h "; sys.exit(1);
 
 if options.verbose:
-    print 'Input directory: ', options.inputdir
-    print 'Object name: ', options.object
+    print 'Input spectrum: ', options.input
     print 'Output wavelength range: ', options.wlrange
     print 'Spectrum type: ', options.spectype
+    print 'Print header: ', options.header
     print 'Polar option: ', options.polar
     print 'Telluric correction: ', options.telluric
     print 'Heliocentric correction: ', options.helio
 
-wl0, wlf = options.wlrange.split()
 
-filelist = espectrolib.generateList(options.inputdir, options.object)
+spc = Spectrum(options.input, options.spectype, options.polar, options.telluric, options.helio)
 
-for filepath in filelist :
-    spc = Spectrum(filepath, options.spectype, options.polar, options.telluric, options.helio)
-    wl,flux,fluxerr = spc.extractChunk(float(wl0), float(wlf))
-    chunk = SpectrumChunk(wl,flux,fluxerr)
-    chunk.removeBackground(2.0)
-    init_guess = [656.270,2500, 0.5]
-    wlcen, amp, sigma = chunk.fitgaussian(init_guess)
-    print spc.getTimeHJDTT(), wlcen[0], amp[0], sigma[0]
+if options.header :
+    spc.info()
+    print "# wavelength(nm) flux flux_err"
 
+wl0,wlf = espectrolib.wlrange(options.wlrange, spc)
+
+wl,flux,fluxerr = spc.extractChunk(wl0,wlf)
+chunk = SpectrumChunk(wl,flux,fluxerr)
+chunk.printdata()

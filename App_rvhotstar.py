@@ -1,20 +1,18 @@
-#!/home/yasmin/anaconda2/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
             #!/usr/bin/python
             #!/opt/anaconda/bin/python
-            #!/Users/edermartioli/Local/Ureka/variants/common/bin/python
     Created on Mar 29 2017
     
     Description: Radial velocity time series using a list of isolated spectral lines
     
-    @author: Yasmin Amado 
+    @author: Eder Martioli <emartioli@lna.br>
     
-   INPE / Laboratorio Nacional de Astrofisica, Brazil.
+    Laboratorio Nacional de Astrofisica, Brazil.
     
     Simple usage example:
-    /Users/edermartioli/ESPECTRO/espectro/rvhotstar.py --inputdir=/Users/edermartioli/Reductions/GRACES/20150807/ --spectype=norm --object="KIC 09472174" --wlrange="667.3 668.3" -tr
+    python $PATH/App_rvhotstar.py --inputdir=/Users/edermartioli/Reductions/GRACES/20150807/ --spectype=norm --object="KIC 09472174" --wlrange="667.3 668.3" -tr
     """
 
 __version__ = "1.0"
@@ -43,7 +41,7 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with rvhotstar.py -h "; sys.exit(1);
+    print "Error: check usage with App_rvhotstar.py -h "; sys.exit(1);
 
 if options.verbose:
     print 'Input directory: ', options.inputdir

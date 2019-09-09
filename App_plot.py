@@ -1,21 +1,19 @@
-#!/home/yasmin/anaconda2/bin/python
 # -*- coding: iso-8859-1 -*-
 """
     Shebang options:
             #!/usr/bin/python
             #!/opt/anaconda/bin/python
-            #!/Users/edermartioli/Local/Ureka/variants/common/bin/python
     Created on Mar 29 2017
     
-    Description: Estract spectrum from Espadons fits products
+    Description: Estract spectrum from OPERA fits products
     
-    @author: Yasmin Amado 
+    @author: Eder Martioli
     
-   INPE / Laboratorio Nacional de Astrofisica, Brazil.
+    Laboratorio Nacional de Astrofisica, Brazil.
     
     Simple usage example:
     
-    ./extract.py --input=1830317o.pol.fits.gz --wlrange="650 665" --spectype=norm -t -r
+    python $PATH/App_extract.py --input=spectrum.m.fits.gz --wlrange="650 665" --spectype=norm -tr
     """
 
 __version__ = "1.0"
@@ -30,6 +28,8 @@ from spectralclass import Spectrum
 from spectralclass import SpectrumChunk
 import espectrolib
 
+import matplotlib.pyplot as plt
+
 parser = OptionParser()
 parser.add_option("-i", "--input", dest="input", help="Input spectrum file",type='string', default="")
 parser.add_option("-w", "--wlrange", dest="wlrange", help="Output wavelength range (nm)",type='string', default="")
@@ -42,7 +42,7 @@ parser.add_option("-r", action="store_true", dest="helio", help="heliocentric co
 try:
     options,args = parser.parse_args(sys.argv[1:])
 except:
-    print "Error: check usage with extract.py -h "; sys.exit(1);
+    print "Error: check usage with App_extract.py -h "; sys.exit(1);
 
 if options.verbose:
     print 'Input spectrum: ', options.input
@@ -52,26 +52,29 @@ if options.verbose:
     print 'Telluric correction: ', options.telluric
     print 'Heliocentric correction: ', options.helio
 
-wl0, wlf = options.wlrange.split()
 
 spc = Spectrum(options.input, options.spectype, options.polar, options.telluric, options.helio)
 
-#spc.info()
-wl,flux,fluxerr = spc.extractChunk(float(wl0), float(wlf))
+spc.applyMask()
 
-chunk = SpectrumChunk(wl,flux,fluxerr)
+minorder, maxorder = spc.getMinMaxOders()
+for o in range(minorder,maxorder) :
+    wl,flux,fluxerr = spc.extractOrder(o)
+    print o, wl[0], wl[-1]
+    plt.plot(wl,flux)
 
-chunk.snrfilter(15.0)
 
-chunk.removeBackground(2.0)
+#wl0,wlf = espectrolib.wlrange(options.wlrange, spc)
+#wl,flux,fluxerr = spc.extractChunk(wl0,wlf)
+#plt.plot(wl,flux)
 
-#chunk.binning(0.5, median=True)
+#chunk = SpectrumChunk(wl,flux,fluxerr)
 
-#chunk.fft_filter()
+#wlsampling=0.0045
+#chunk.binning(wlsampling, median=True)
+#wl,flux,yerr = chunk.getSpectrum()
+#plt.plot(wl,flux)
 
-init_guess = [656.270,2500, 0.5]
-chunk.fitgaussian(init_guess)
+#plt.errorbar(wl,flux,yerr=fluxerr,marker='o')
 
-chunk.printdataWithModel()
-
-#spc.printdata()
+plt.show()
